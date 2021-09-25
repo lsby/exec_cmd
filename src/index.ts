@@ -7,15 +7,16 @@ function 字符串转数组(s: string) {
         .replace(/\r/g, '')
         .split('\n')
         .filter((a) => a != '' && a != null)
+        .filter((a) => a != 'Active code page: 65001')
 }
 
-export default function fun(cmd: string, opt?: child_process.ExecSyncOptionsWithStringEncoding): string[] {
-    cmd = cmd.trim().replace(/  /g, ' ')
+export default function fun(cmd: string[], opt?: child_process.ExecSyncOptionsWithStringEncoding): string[] {
+    var cmd = cmd.map((a) => a.trim().replace(/  /g, ' '))
     if (os.type() == 'Windows_NT') {
-        cmd = 'chcp 65001 && ' + cmd
+        cmd.push('chcp 65001')
     }
     try {
-        var 结果 = child_process.execSync(cmd, {
+        var 结果 = child_process.execSync(cmd.join(' && '), {
             encoding: 'utf8',
             ...opt,
         })
