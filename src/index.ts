@@ -22,7 +22,7 @@ export default function fun(cmd: string[], opt?: child_process.ExecSyncOptionsWi
         })
     } catch (e) {
         var ex = e as any
-        throw 字符串转数组([ex.stdout, ex.stderr].join('\n'))
+        throw [ex.stdout, ex.stderr].join('\n')
     }
 
     return 字符串转数组(结果)
