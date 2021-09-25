@@ -13,7 +13,7 @@ function 字符串转数组(s: string) {
 export default function fun(cmd: string[], opt?: child_process.ExecSyncOptionsWithStringEncoding): string[] {
     var cmd = cmd.map((a) => a.trim().replace(/  /g, ' '))
     if (os.type() == 'Windows_NT') {
-        cmd.push('chcp 65001')
+        cmd.unshift('chcp 65001')
     }
     try {
         var 结果 = child_process.execSync(cmd.join(' && '), {
