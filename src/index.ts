@@ -27,7 +27,7 @@ export default function fun(cmd: string, opt?: child_process.SpawnOptions): Prom
             if (code == 0) {
                 return res(字符串转数组(out日志))
             } else {
-                return rej(err日志)
+                return rej([JSON.stringify(错误), err日志, out日志].filter((a) => a != '').join('\n'))
             }
         })
         进程.on('error', (err) => {
