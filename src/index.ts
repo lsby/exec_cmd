@@ -1,5 +1,4 @@
 import * as child_process from 'child_process'
-import os from 'os'
 import spawn from 'cross-spawn'
 import { ChildProcess } from 'child_process'
 
@@ -28,7 +27,8 @@ export default function fun(cmd: string, opt?: child_process.SpawnOptions): Prom
             if (code == 0) {
                 return res(字符串转数组(out日志))
             } else {
-                return rej({ err: 错误, stderr: err日志 })
+                ;(错误 as any).stderr = err日志
+                return rej(错误)
             }
         })
         进程.on('error', (err) => {
