@@ -1,6 +1,6 @@
 {
     "name": "@lsby/exec_cmd",
-    "version": "0.0.6",
+    "version": "0.0.7",
     "main": "dist/index.js",
     "scripts": {
         "dev": "npm run watch",
@@ -17,6 +17,7 @@
     "author": "",
     "devDependencies": {
         "@lsby/js_tools": "^0.0.3",
+        "@types/cross-spawn": "^6.0.2",
         "@types/mocha": "^8.2.2",
         "@types/node": "^16.9.1",
         "nyc": "^15.1.0",
@@ -37,5 +38,8 @@
         "url": "https://github.com/lsby/exec_cmd/issues"
     },
     "homepage": "https://github.com/lsby/exec_cmd#readme",
-    "description": ""
+    "description": "",
+    "dependencies": {
+        "cross-spawn": "^7.0.3"
+    }
 }

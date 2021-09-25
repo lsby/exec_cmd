@@ -1,36 +1,44 @@
 import * as child_process from 'child_process'
 import os from 'os'
+import spawn from 'cross-spawn'
+import { ChildProcess } from 'child_process'
 
 function 字符串转数组(s: string) {
     return s
         .toString()
         .replace(/\r/g, '')
         .split('\n')
-        .filter((a) => a != '' && a != null)
-        .filter((a) => a != 'Active code page: 65001')
+        .filter((a) => a != null)
+        .filter((a) => a != '')
 }
 
-export default function fun(cmd: string[], opt?: child_process.ExecSyncOptionsWithStringEncoding): string[] {
-    var cmd = cmd.map((a) => a.trim().replace(/  /g, ' '))
-    if (os.type() == 'Windows_NT') {
-        cmd.unshift('chcp 65001')
-    }
-    try {
-        var 结果 = child_process.execSync(cmd.join(' && '), {
-            encoding: 'utf8',
-            ...opt,
-        })
-    } catch (e) {
-        var ex = e as any
-        throw [ex.stdout, ex.stderr]
-            .map((a) => a.replace(/\r/g, ''))
-            .map((a) => a.replace(/\n/g, ''))
-            .map((a) => a.replace(/Active code page: 65001/g, ''))
-            .map((a) => a.trim())
-            .filter((a) => a != null)
-            .filter((a) => a != '')
-            .join('\n')
-    }
+export default function fun(cmd: string, opt?: child_process.SpawnOptions): Promise<string[]> {
+    return new Promise((res, rej) => {
+        var c = cmd.trim().replace(/  /g, ' ').split(' ')
+        var 进程: ChildProcess = spawn(c[0], c.slice(1), opt)
+        var out日志 = ''
+        var err日志 = ''
+        var 错误: Error | null = null
 
-    return 字符串转数组(结果)
+        if (进程.stdout == null) throw '创建失败'
+        if (进程.stderr == null) throw '创建失败'
+        if (进程.stdin == null) throw '创建失败'
+
+        进程.on('close', (code) => {
+            if (code == 0) {
+                return res(字符串转数组(out日志))
+            } else {
+                return rej({ err: 错误, stderr: err日志 })
+            }
+        })
+        进程.on('error', (err) => {
+            错误 = err
+        })
+        进程.stdout.on('data', (data) => {
+            out日志 += data.toString()
+        })
+        进程.stderr.on('data', (data) => {
+            err日志 += data.toString()
+        })
+    })
 }
