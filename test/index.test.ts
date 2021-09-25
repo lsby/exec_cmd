@@ -15,7 +15,7 @@ describe('测试组', async function () {
         try {
             lib(['cd aaa'], { encoding: 'utf8' })
         } catch (e) {
-            return tools.断言相等((e as string[]).includes('The system cannot find the path specified.'), true)
+            return tools.断言相等(e == 'The system cannot find the path specified.', true)
         }
         throw '不应该到这里'
     })

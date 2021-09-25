@@ -22,7 +22,14 @@ export default function fun(cmd: string[], opt?: child_process.ExecSyncOptionsWi
         })
     } catch (e) {
         var ex = e as any
-        throw [ex.stdout, ex.stderr].join('\n')
+        throw [ex.stdout, ex.stderr]
+            .map((a) => a.replace(/\r/g, ''))
+            .map((a) => a.replace(/\n/g, ''))
+            .filter((a) => a != null)
+            .filter((a) => a != '')
+            .filter((a) => a != '\n')
+            .filter((a) => a != 'Active code page: 65001')
+            .join('\n')
     }
 
     return 字符串转数组(结果)
